@@ -16,11 +16,12 @@ export default function Login() {
     const [buttonDisabled, setButtonDisabled] = React.useState(false);
     const onLogin = async () => {
         try {
+            setButtonDisabled(true);
             setLoading(true);
             const {data: response} = await axios.post("/api/users/login", user);
             if (response.success) {
                 console.log("login success",response);
-                return router.push("/dashboard");
+                return router.push("/profile");
             }
             
         } catch(error : any) {
@@ -28,6 +29,7 @@ export default function Login() {
             toast.error(error.message);
         }finally {
             setLoading(false);
+            setButtonDisabled(false);
         }
     }
 
@@ -61,8 +63,9 @@ export default function Login() {
                 className="input px-4 py-2 border border-gray-300 outline-none focus:border-blue-500 me-4"
             />
             <button onClick={onLogin}
+            disabled={buttonDisabled}               
             className='px-4 py-2 border border-gray-300 outline-none focus:border-blue-500 me-4 '
-            >{buttonDisabled ?  "Processing" : "Login"}</button>
+            >{loading ?  "processing" : "Login"}</button>
            <Link href="/signup">Don&apos;t have an account? Signup</Link>
         </div>
     );
